@@ -5,12 +5,13 @@
     color: rgb(47,78,156);
 }
 .headlineBackground{
-    padding: 0px 15px 2px 5px;
+    padding: 0px 0px 2px 5px;
     background-color: white;
     border-radius: 15%;
-    font-size: 85px;
+    font-size: 75px;
     position: absolute;
     left: 575px;
+    top: 7px;
     width: 300px;
     border: 3px solid #73AD21;
 
@@ -35,12 +36,12 @@
     color: gold;
 }
 .headline{
-font-size: 90px;
+font-size: 80px;
 font-weight: 1000;
 font-style:italic;
 }
 .straightLines{
-    font-size: 85px;
+    font-size: 75px;
     font-weight: 750;
     font-style:italic;
 }
@@ -73,6 +74,13 @@ tr{
 }
 a:link {
     text-decoration: none;
+}
+button{
+    background: radial-gradient(circle at top right,
+     rgb(180,30,20), rgb(100,30,40)),100% ;
+    border-radius: 20%;
+    margin-left: 5px;
+    color: white;
 }
 body{
     background-color: linen;

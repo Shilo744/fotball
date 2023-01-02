@@ -68,9 +68,9 @@ class Teams extends React.Component {
                                     <div onClick={() => {
                                         alert(team.name);
                                         this.getPlayers(this.props, team.id)
-                                    }}>
+                                    }}><button>
                                         <th>{team.id}</th>
-                                        <th>{team.name}</th>
+                                        <th>{team.name}</th></button>
                                     </div> //write function to onClick
                                 )
                             })
