@@ -6,8 +6,6 @@ import History from "./History"
 import NotFount from "./NotFount";
 import Teams from "./Teams";
 import axios from "axios";
-import {wait} from "@testing-library/user-event/dist/utils";
-
 
 class App extends React.Component {
 
@@ -21,6 +19,7 @@ info={
     usualColor:"gray margin bounds",
     leagues:[],
     selectedOptions: "Options",
+    selectorChanged: "Options",
     select:null,
     routers:{
         domainRouter: "https://app.seker.live/fm1",
@@ -99,11 +98,9 @@ info={
 
         return (
                 <BrowserRouter>
-                    <il className={"headline red"}>----------------</il>
                     <il className={"headlineBackground"}>
                     <il className={"straightLines red"}>|||</il>
                     <il className={"headline blue"}>TWO</il></il>
-                    <il className={"headline red"}>-----------------</il>
                     <br/>
                     <il className={"gold text"}>Choose a league </il>
                     {/*כפתור בחירת קבוצה*/}
@@ -115,14 +112,27 @@ info={
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.HomePage)}} className={this.colors.homepageColor} to={"/"}>{this.info.pageName.HomePage}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.Teams)}} className={this.colors.teamsColor} to={this.info.pageName.Teams}>{this.info.pageName.Teams}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.History)}} className={this.colors.historyColor} to={this.info.pageName.History}>{this.info.pageName.History}</NavLink>
-                    <Routes>
-                        <Route path={"/"} element={<HomePage props={this.info.routers.leaguesListRouter}/>}/>
-                        <Route path={"/teams"} element={<Teams domainRouter={this.info.routers.domainRouter} teamRouter={this.info.routers.teamRouter} id={this.info.key}/>}/>
-                        <Route path={"/history"} element={<History/>}/>
-                        <Route path={"*"} element={<NotFount/>}/>
-                    </Routes>
+
+                    {this.routers()}
+
                 </BrowserRouter>
         );
+    }
+    routers(){
+    const routers=<Routes>
+        <Route path={"/"} element={<HomePage props={this.info.routers.leaguesListRouter}/>}/>
+        <Route path={"/teams"} element={<Teams domainRouter={this.info.routers.domainRouter} teamRouter={this.info.routers.teamRouter} id={this.info.key}/>}/>
+        <Route path={"/history"} element={<History/>}/>
+        <Route path={"*"} element={<NotFount/>}/>
+    </Routes>
+        this.update()
+    return routers
+    }
+    update(){
+    if(this.info.selectedOptions!==this.info.selectorChanged){
+        this.info.selectorChanged=this.info.selectedOptions
+        this.refresh()
+    }
     }
   render() {
     return (

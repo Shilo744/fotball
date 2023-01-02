@@ -5,9 +5,16 @@
     color: rgb(47,78,156);
 }
 .headlineBackground{
+    padding: 0px 15px 2px 5px;
     background-color: white;
-    border-radius: 7%;
+    border-radius: 15%;
     font-size: 85px;
+    position: absolute;
+    left: 575px;
+    width: 300px;
+    border: 3px solid #73AD21;
+
+
 }
 .purple{
     color: rebeccapurple;
@@ -62,7 +69,7 @@ select{
     font-weight: 300;
 }
 tr{
-    font-size: 15px;
+    font-size: 17px;
 }
 a:link {
     text-decoration: none;
