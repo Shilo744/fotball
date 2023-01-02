@@ -1,38 +1,79 @@
-.App {
-  text-align: center;
+.black{
+    color: black;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.blue{
+    color: rgb(47,78,156);
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.headlineBackground{
+    background-color: white;
+    border-radius: 7%;
+    font-size: 85px;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.purple{
+    color: rebeccapurple;
 }
-
-.App-link {
-  color: #61dafb;
+.red{
+    color: red;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.white{
+    color: white;
+}
+.gray{
+    color: gray;
+}
+.margin{
+    margin: 5px;
+}
+.gold{
+    color: gold;
+}
+.headline{
+font-size: 90px;
+font-weight: 1000;
+font-style:italic;
+}
+.straightLines{
+    font-size: 85px;
+    font-weight: 750;
+    font-style:italic;
+}
+.table{
+    border: 2px solid gold;
+    border-radius: 4%;
+    margin-left: 15px;
+    width: 270px;
+    background-color: black;
+    color: white;
+}
+.text{
+    margin-left: 15px;
+    font-size: 32px;
+    font-weight: 700;
+}
+.bounds{
+    margin-left: 15px;
+    border-radius: 20%;
+    font-size: 20px;
+    border: 2px inset white;
+    background-color: rgb(47,78,155);
+}
+select{
+    font-size: 20px;
+    font-weight: 300;
+}
+tr{
+    font-size: 15px;
+}
+a:link {
+    text-decoration: none;
+}
+body{
+    background-color: linen;
+    background-image: url("https://thumblr.uniid.it/blog_component/149437/cc41be364e0e.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+div{
+    color: white;
 }
