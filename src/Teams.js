@@ -4,16 +4,72 @@ import axios from "axios";
 class Teams extends React.Component {
     info = {
         leaguesTeams: [],
-        currentLeague: ''
+        currentLeague: '',
+        clickedTeam:[],
+        oldClickedTeam:'',
+        currentClickedTeam:'',
+        history:[],
+        teamToShow:undefined,
+        historyToShow:undefined
     }
+    refresh(){
+        this.setState({})
+        this.props.change.setState({})
+    }
+    history(teamId){
+        if ((this.info.currentClickedTeam !== this.info.oldClickedTeam) || (this.info.currentClickedTeam!=='' && this.info.oldClickedTeam==='')) {
+            this.info.oldClickedTeam=this.info.currentClickedTeam
+        this.info.history=[]
+            const link=this.props.routers.domainRouter+ this.props.routers.historyRouter + this.info.currentLeague+"/"+teamId
+        axios.get(link)
+            .then((response) => {
+                    (response.data.map((item) => {
 
+                        let homeGoals=0
+                        let awayGoals=0
+
+                        item.goals.map((goal) => {
+                        goal.home? homeGoals++:awayGoals++
+                        })
+                        const itemToInsert = {
+                            homeTeam: item.homeTeam.name,
+                            awayTeam: item.awayTeam.name,
+                            homeGoals: homeGoals,
+                            awayGoals: awayGoals
+                        }
+                        this.info.history.push(itemToInsert);
+                    }))
+
+                }
+            )}
+            return(<table className={"table history next2"}>
+                <div className={"insideHeadline"}>History</div>
+                <tr>
+                    {
+                        this.info.history.map((item) => {
+                            return (
+                                <div><button>
+                                    <th>{item.homeTeam} </th>
+                                    <th>{item.homeGoals +" -"}</th>
+                                    <th>{item.awayGoals} </th>
+                                    <th>{item.awayTeam}</th>
+                                </button>
+                                </div> //write function to onClick
+                            )
+                        })
+                    }
+                </tr>
+            </table>)
+    }
     getData = (props) => {
 
-        if (this.props.id !== '') {
             if (this.props.id !== this.info.currentLeague) {
                 this.info.currentLeague = this.props.id
                 this.info.leaguesTeams = []
-                axios.get(props.domainRouter + props.teamRouter + props.id)
+                this.info.clickedTeam = []
+                this.info.teamToShow=<il/>
+                const link=props.routers.domainRouter + props.routers.teamRouter + props.id
+                axios.get(link)
                     .then((response) => {
                             (response.data.map((item) => {
                                 const itemToInsert = {
@@ -26,27 +82,49 @@ class Teams extends React.Component {
                     )
             }
         }
-    }
 
-    getPlayers = (props, teamId) => {
-        axios.get(props.domainRouter + props.squadRouter + props.id + '/' + teamId)
+
+    getPlayers = (props) => {
+            if ((this.info.currentClickedTeam !== this.info.oldClickedTeam) || (this.info.currentClickedTeam!=='' && this.info.oldClickedTeam==='')) {
+                this.info.clickedTeam=[]
+        const link=props.routers.domainRouter + props.routers.squadRouter + props.id + '/' + this.info.currentClickedTeam
+        axios.get(link)
             .then((response) => {
-                    (response.data.map((item) => {
+                     (response.data.map((item) => {
                         const itemToInsert = {
-                            id: item.id,
-                            name: item.name
+                            firstName: item.firstName,
+                            lastName: item.lastName
                         }
-                        this.info.leaguesTeams.push(itemToInsert);
+                        this.info.clickedTeam.push(itemToInsert);
                     }))
                 }
             )
-    }
+            }
+            if(this.info.currentClickedTeam!==''){
+        return(<table className={"table next"}>
+            <div className={"insideHeadline"}>Players</div>
+            <tr>
+                {
+                    this.info.clickedTeam.map((player) => {
+                        return (
+                            <div onClick={() => {
+                                alert(player.firstName+" "+player.lastName+" is a loser");
+                            }}><button>
+                                <th>{player.firstName}</th>
+                                <th>{player.lastName}</th></button>
+                            </div> //write function to onClick
+                        )
+                    })
+                }
+            </tr>
+        </table>)
+    }}
 
-    showTeamDetails = (team) => {
+    showTeamDetails = (props) => {
         return (
             <div>
                 {
-                    axios.get(this.props.domainRouter + this.props.routers.squadRouter + this.props.id + team.id)
+                    axios.get(props.routers.domainRouter + props.routers.squadRouter + props.id + this.info.clickedTeam)
                         .then((response) => {
                             alert(response.data)
                         })
@@ -55,36 +133,54 @@ class Teams extends React.Component {
         )
     }
 
+    render() {
+        return (
+            <div>
+                {this.setSite()}
+            </div>
+        )
+    }
     setSite = () => {
         this.getData(this.props)
         return (
             <div>
                 <br/>
-                <table className={"table"}>
-                    <tr>
-                        {
-                            this.info.leaguesTeams.map((team) => {
-                                return (
-                                    <div onClick={() => {
-                                        alert(team.name);
-                                        this.getPlayers(this.props, team.id)
-                                    }}><button>
-                                        <th>{team.id}</th>
-                                        <th>{team.name}</th></button>
-                                    </div> //write function to onClick
-                                )
-                            })
-                        }
-                    </tr>
-                </table>
+                {this.enterContent()}
+                {this.info.teamToShow}
+                {this.info.historyToShow}
             </div>
         )
     }
-
-    render() {
-        return (
-            this.setSite()
-        )
+    enterContent(){
+        let content;
+        if(this.info.leaguesTeams.length>0){
+            content=<table className={"table"}>
+            <tr>
+                <div className={"insideHeadline"}>Teams</div>
+                {
+                    this.info.leaguesTeams.map((team) => {
+                        return (
+                            <div onClick={() => {
+                                this.info.currentClickedTeam=team.id;
+                                this.info.teamToShow=this.getPlayers(this.props)
+                                this.info.historyToShow=this.history(team.id)
+                                this.refresh()
+                            }}><button>
+                                {/*<th>{teamToShow.id}</th>*/}
+                                <th>{team.name}</th></button>
+                            </div> //write function to onClick
+                        )
+                    })
+                }
+            </tr>
+        </table>
+        }
+        else content= <table className={"table"}>
+            <tr>
+               Please choose a league and press Teams
+            </tr>
+        </table>
+        return content
     }
 }
 

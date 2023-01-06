@@ -23,6 +23,13 @@
 .red{
     color: red;
 }
+.backgroundGreen{
+    background-color: green;
+}
+.backgroundRed{
+    background-color: red;
+
+}
 .white{
     color: white;
 }
@@ -40,18 +47,36 @@ font-size: 80px;
 font-weight: 1000;
 font-style:italic;
 }
+.insideHeadline{
+    font-size: 24px;
+    font-weight: 1000;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    background-color: midnightblue;
+    border-radius: 7%;
+ }
 .straightLines{
     font-size: 75px;
     font-weight: 750;
     font-style:italic;
 }
-.table{
+.table {
     border: 2px solid gold;
-    border-radius: 4%;
+    border-radius: 3%;
+    position: absolute;
     margin-left: 15px;
-    width: 270px;
+    width: 330px;
     background-color: black;
     color: white;
+}
+.history{
+    width: 420px;
+}
+.next{
+    margin-left: 355px;
+}
+.next2{
+    margin-left: 695px;
 }
 .text{
     margin-left: 15px;
@@ -60,7 +85,7 @@ font-style:italic;
 }
 .bounds{
     margin-left: 15px;
-    border-radius: 20%;
+    border-radius: 15%;
     font-size: 20px;
     border: 2px inset white;
     background-color: rgb(47,78,155);
@@ -78,7 +103,7 @@ a:link {
 button{
     background: radial-gradient(circle at top right,
      rgb(180,30,20), rgb(100,30,40)),100% ;
-    border-radius: 20%;
+    border-radius: 8%;
     margin-left: 5px;
     color: white;
 }

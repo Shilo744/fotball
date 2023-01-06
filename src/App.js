@@ -6,6 +6,8 @@ import History from "./History"
 import NotFount from "./NotFount";
 import Teams from "./Teams";
 import axios from "axios";
+import MostGoals from "./MostGoals";
+import Statistics from "./Statistics";
 
 class App extends React.Component {
 
@@ -14,13 +16,17 @@ info={
     key:'',
     pageName:{HomePage:"HomePage",
         Teams:"Teams",
-    History:"History"},
+        History:"History",
+        MostGoals:"MostGoals",
+        Statistics: "Statistics"
+    },
     colorOnClick:"white margin bounds",
     usualColor:"gray margin bounds",
     leagues:[],
     selectedOptions: "Options",
     selectorChanged: "Options",
     select:null,
+    change:false,
     routers:{
         domainRouter: "https://app.seker.live/fm1",
         leaguesListRouter: "/leagues",
@@ -28,34 +34,53 @@ info={
         historyRouter: "/history/" /*+ leagueId*/,
         roundRouter: "/round/" /*+leagueId/round*/,
         squadRouter: "/squad/" /*+leagueId/teamId*/,
-        teamHistoryRouter: "/history/" /*+ leagueId/teamId*/
     },
 }
     colors={
-        homepageColor:this.info.colorOnClick,
-        teamsColor:this.info.usualColor,
-        historyColor:this.info.usualColor
+        homepageColor: this.info.colorOnClick,
+        teamsColor: this.info.usualColor,
+        mostGoalsColor: this.info.usualColor,
+        historyColor: this.info.usualColor,
+        statisticsColor: this.info.usualColor
     }
 
     changeColorOfLink(clicked){
+        this.colors.homepageColor = this.info.usualColor
+        this.colors.teamsColor = this.info.usualColor
+        this.colors.mostGoalsColor = this.info.usualColor
+        this.colors.historyColor = this.info.usualColor
+        this.colors.statisticsColor = this.info.usualColor
 
-        this.colors.homepageColor=this.info.usualColor
-        this.colors.teamsColor=this.info.usualColor
-        this.colors.historyColor=this.info.usualColor
-
-        if(clicked===this.info.pageName.HomePage){
-            this.colors.homepageColor=this.info.colorOnClick
-        }
-        else if(clicked===this.info.pageName.Teams){
-            this.colors.teamsColor=this.info.colorOnClick
-        }
-        else if(clicked===this.info.pageName.History){
-            this.colors.historyColor=this.info.colorOnClick
+        switch (clicked){
+            case this.info.pageName.HomePage:{
+                this.colors.homepageColor=this.info.colorOnClick;
+                break;
+            }
+            case this.info.pageName.Teams:{
+                this.colors.teamsColor=this.info.colorOnClick;
+                break;
+            }
+            case this.info.pageName.History:{
+                this.colors.historyColor=this.info.colorOnClick;
+                break;
+            }
+            case this.info.pageName.MostGoals:{
+                this.colors.mostGoalsColor=this.info.colorOnClick;
+                break;
+            }
+            case this.info.pageName.Statistics:{
+                this.colors.statisticsColor = this.info.colorOnClick
+                break
+            }
+            default:{
+                this.colors.homepageColor = this.info.colorOnClick
+            }
         }
         this.refresh()
     }
     getLeagues = () => {
-        axios.get(this.info.routers.domainRouter+this.info.routers.leaguesListRouter)
+    const link=this.info.routers.domainRouter+this.info.routers.leaguesListRouter
+        axios.get(link)
             .then((response) => {
                     return(response.data.map((item) => {
                         const itemToInsert = {
@@ -74,9 +99,13 @@ info={
             this.info.selectedOptions= key
             this.info.key=key
     }
+    showOptions(){
+    if(this.info.key===''){
+    return <option value={"Options"}>{"Options"}</option>}
+    }
     selectOptions(){
-    this.info.select=<select value={this.info.selectedOptions} onChange={this.leagueEvent} onClick={(()=>{this.refresh()})} onMouseOver={(()=>{this.refresh()})} value={this.info.selectedOptions}>
-        <option value={"Options"}>{"Options"}</option>
+    this.info.select=<select value={this.info.selectedOptions} onChange={this.leagueEvent} onClick={(()=>{this.refresh()})}>
+        {this.showOptions()}
         {
             this.info.leagues.map((league) => {
                 return(
@@ -90,13 +119,17 @@ info={
     this.setState({})
     }
     pageList(){
+    if(this.info.change){
+        this.refresh()
+        this.info.change=false
+    }
         if(this.info.start){
             this.getLeagues()
             this.info.start=false
         }
         this.selectOptions()
 
-        return (
+        return (<div onChange={()=>{this.refresh()}}>
                 <BrowserRouter>
                     <il className={"headlineBackground"}>
                     <il className={"straightLines red"}>|||</il>
@@ -108,32 +141,34 @@ info={
                         {this.info.select}
                     </il>
 
-                    <br/><br/>
+                    <div>
+                        <br/>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.HomePage)}} className={this.colors.homepageColor} to={"/"}>{this.info.pageName.HomePage}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.Teams)}} className={this.colors.teamsColor} to={this.info.pageName.Teams}>{this.info.pageName.Teams}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.History)}} className={this.colors.historyColor} to={this.info.pageName.History}>{this.info.pageName.History}</NavLink>
+                    <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.MostGoals)}} className={this.colors.mostGoalsColor} to={this.info.pageName.MostGoals}>{this.info.pageName.MostGoals}</NavLink>
+                    <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.Statistics)}} className={this.colors.statisticsColor} to={this.info.pageName.Statistics}>{this.info.pageName.Statistics}</NavLink>
 
+                    </div>
                     {this.routers()}
 
                 </BrowserRouter>
+        </div>
         );
     }
     routers(){
+
     const routers=<Routes>
         <Route path={"/"} element={<HomePage props={this.info.routers.leaguesListRouter}/>}/>
-        <Route path={"/teams"} element={<Teams domainRouter={this.info.routers.domainRouter} teamRouter={this.info.routers.teamRouter} id={this.info.key}/>}/>
-        <Route path={"/history"} element={<History/>}/>
+        <Route path={"/teams"} element={<Teams routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
+        <Route path={"/historyToShow"} element={<History id={this.info.key}/>}/>
+        <Route path={"/mostGoals"} element={<MostGoals routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
+        <Route path={"/statistics"} element={<Statistics/>}/>
         <Route path={"*"} element={<NotFount/>}/>
     </Routes>
-        this.update()
     return routers
     }
-    update(){
-    if(this.info.selectedOptions!==this.info.selectorChanged){
-        this.info.selectorChanged=this.info.selectedOptions
-        this.refresh()
-    }
-    }
+
   render() {
     return (
         <div className="App">
