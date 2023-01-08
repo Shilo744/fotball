@@ -159,7 +159,7 @@ info={
     }
     routers(){
     this.info.routersShow=<Routes>
-        <Route path={"/"} element={<HomePage/>}/>
+        <Route path={"/"} element={<HomePage props={this.info.routers.leaguesListRouter}/>}/>
         <Route path={"/teams"} element={<Teams routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
         <Route path={"/history"} element={<History id={this.info.key} routers={this.info.routers} change={this.state}/>}/>
         <Route path={"/mostGoals"} element={<MostGoals routers={this.info.routers} id={this.info.key} change={this.state}/>}/>

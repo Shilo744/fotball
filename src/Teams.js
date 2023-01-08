@@ -3,7 +3,7 @@ import axios from "axios";
 
 class Teams extends React.Component {
     info = {
-        refresh:false,
+        refresh:true,
         leaguesTeams: [],
         currentLeague: '',
         clickedTeam:[],
@@ -12,6 +12,7 @@ class Teams extends React.Component {
         history:[],
         teamToShow:undefined,
         historyToShow:undefined,
+        intervalTime:0
     }
     refresh(){
         this.setState({})
@@ -62,7 +63,6 @@ class Teams extends React.Component {
             </table>)
     }
     getData = (props) => {
-
             if (this.props.id !== this.info.currentLeague) {
                 this.info.currentLeague = this.props.id
                 this.info.leaguesTeams = []
@@ -120,7 +120,6 @@ class Teams extends React.Component {
         </table>)
     }}
 
-
     setSite = () => {
 
         this.getData(this.props)
@@ -132,6 +131,16 @@ class Teams extends React.Component {
             </div>
         )
     }
+    onClickTeam(team,interval){
+        if(this.info.intervalTime>=3){
+            clearInterval(interval)
+        }
+        this.info.intervalTime++
+        this.info.currentClickedTeam=team.id;
+        this.info.teamToShow=this.getPlayers(this.props)
+        this.info.historyToShow=this.history(team.id)
+        this.refresh()
+    }
     enterContent(){
         if(this.info.leaguesTeams.length>0){
             this.info.pageToShow=<table className={"table"}>
@@ -141,11 +150,11 @@ class Teams extends React.Component {
                     this.info.leaguesTeams.map((team) => {
                         return (
                             <tr onClick={() => {
-                                this.info.currentClickedTeam=team.id;
-                                this.info.teamToShow=this.getPlayers(this.props)
-                                this.info.historyToShow=this.history(team.id)
-                                this.refresh()
-                                this.info.refresh=true
+                                this.info.intervalTime=0
+                                let interval=setInterval((()=>{this.onClickTeam(team,interval)}), 500);
+                                this.onClickTeam(team)
+
+
                             }}>
                                 <th>{team.name}</th>
                             </tr> //write function to onClick

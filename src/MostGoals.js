@@ -36,35 +36,40 @@ refresh(){
         }
         this.info.sortedPlayers=this.sort(this.info.playersGoals)
         return(
+            <div className={"marginTop"} onClick={(()=>{this.refresh()})}>
             <table className={"table"}>
                 <tr>
-                <td className={"margin backgroundMidnightblue"}>First Name:</td>
-                <td className={"margin backgroundMidnightblue"}>Last Name:</td>
-                <td className={"margin backgroundMidnightblue"}>Goals</td>
+                <td className={"margin backgroundMidnightblue text"}>First Name:</td>
+                <td className={"margin backgroundMidnightblue text"}>Last Name:</td>
+                <td className={"margin backgroundMidnightblue text"}>Goals</td>
                 </tr>
                     {
-                        this.sort(this.info.sortedPlayers).slice(0,10).map((player) => {
+                        this.sort(this.info.sortedPlayers)
+                            .slice(0,3).map((player) => {
                             return (
                                 <tr>
-                                    <td>{player.firstName}</td>
-                                    <td>{player.lastName}</td>
-                                    <td>{player.goals}</td>
+                                    <td className={"gold text"}>{player.firstName}</td>
+                                    <td className={"silver text"}>{player.lastName}</td>
+                                    <td className={"red text"}>{player.goals}</td>
                                 </tr> //write function to onClick
                             )
                        })
                     }
 
             </table>
+            </div>
         )
     }
     checkIfExist(itemToInsert){
+        let isExist=false
         this.info.playersGoals.map((player)=>{
             if(this.equal(player.firstName,itemToInsert.firstName) && this.equal(player.lastName,itemToInsert.lastName)){
-                player.goals++
-                return true
+                player.goals++;
+                return isExist=true;
+
             }
         })
-        return false
+        return isExist
     }
     equal(name,nameToCheck){
         if(name.length===nameToCheck.length){

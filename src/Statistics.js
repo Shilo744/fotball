@@ -18,7 +18,7 @@ class Statistics extends React.Component {
             round8: 0,
             round9: 0,
             round10: 0,
-        },
+        }
     }
     roundsMinMax ={
         minRoundGoals: 0,
@@ -41,7 +41,30 @@ class Statistics extends React.Component {
         let round8 = 0;
         let round9 = 0;
         let round10 = 0;
-        for (let i = 1; i <= 3; i++) {
+
+        axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
+            .then((response) => {
+                response.data.map((item) => {
+                    item.goals.map((player) => {
+                        if (player.minute <= 45){
+                            half1++;
+                        } else {
+                            half2++;
+                        }
+                        if(player.minute < minMinuteGoal){
+                            minMinuteGoal = player.minute;
+                        }
+                        if (player.minute > maxMinuteGoal) {
+                            maxMinuteGoal = player.minute
+                        }
+                    })
+                })
+                this.info.halfOneGoals = half1;
+                this.info.halfTwoGoals = half2;
+                this.info.minMinuteGoal = minMinuteGoal;
+                this.info.maxMinuteGoal = maxMinuteGoal;
+            })
+        /*for (let i = 1; i <= 3; i++) {
             axios.get(props.routers.domainRouter + props.routers.historyRouter + i)
                 .then((response) => {
                     response.data.map((item) => {
@@ -64,8 +87,8 @@ class Statistics extends React.Component {
                     this.info.minMinuteGoal = minMinuteGoal;
                     this.info.maxMinuteGoal = maxMinuteGoal;
                 })
-        }
-        for (let i = 0; i <= 3; i++) {
+        }*/
+        /*for (let i = 0; i <= 3; i++) {
             for (let j = 1; j <= 10; j++) {
                 axios.get(props.routers.domainRouter + props.routers.roundRouter + i +'/' + j)
                     .then((response) => {
@@ -105,25 +128,27 @@ class Statistics extends React.Component {
                             }
 
                         })
-                        this.info.rounds.round1 = round1;
-                        this.info.rounds.round2 = round2;
-                        this.info.rounds.round3 = round3;
-                        this.info.rounds.round4 = round4;
-                        this.info.rounds.round5 = round5;
-                        this.info.rounds.round6 = round6;
-                        this.info.rounds.round7 = round7;
-                        this.info.rounds.round8 = round8;
-                        this.info.rounds.round9 = round9;
-                        this.info.rounds.round10 = round10;
-                        this.sortMinAndMax();
                     })
             }
-        }
+        }*/
+        /*this.info.rounds.round1 = round1;
+        this.info.rounds.round2 = round2;
+        this.info.rounds.round3 = round3;
+        this.info.rounds.round4 = round4;
+        this.info.rounds.round5 = round5;
+        this.info.rounds.round6 = round6;
+        this.info.rounds.round7 = round7;
+        this.info.rounds.round8 = round8;
+        this.info.rounds.round9 = round9;
+        this.info.rounds.round10 = round10;
+        //this.sortMinAndMax(this.info.rounds);*/
     }
 
-    sortMinAndMax = () => {
-        let min = 1000;
-        let max = 0;
+
+
+    sortMinAndMax = (rounds) => {
+        let min = rounds[0];
+        let max = rounds[0];
         this.info.rounds.map((round) => {
             if(round < min){
                 min = round;
@@ -138,11 +163,16 @@ class Statistics extends React.Component {
 
     render() {
         {
-            this.getStatistics(this.props);
+            this.getStatistics(this.props)
         }
         return(
-            <div>
-                Statistics:
+            <div className={"home-page-text"}>
+                <div>
+                    <button className={"home-page-text"} >Choose a league and press statistics</button>
+                </div>
+                <div>
+                    Statistics:
+                </div>
                 <div>
                     Goals: half1: {this.info.halfOneGoals} VS half2: {this.info.halfTwoGoals}
                 </div>
