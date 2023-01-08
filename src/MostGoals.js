@@ -30,23 +30,20 @@ refresh(){
                                     this.info.playersGoals.push(itemToInsert)
                                 }
                             })
-
-                        }
+                    }
                     )
                 })
-
         }
         this.info.sortedPlayers=this.sort(this.info.playersGoals)
         return(
-            <div>
-                <br/>
             <table className={"table"}>
+                <tr>
                 <td className={"margin backgroundMidnightblue"}>First Name:</td>
                 <td className={"margin backgroundMidnightblue"}>Last Name:</td>
                 <td className={"margin backgroundMidnightblue"}>Goals</td>
-
+                </tr>
                     {
-                        this.sort(this.info.sortedPlayers).slice(0,3).map((player) => {
+                        this.sort(this.info.sortedPlayers).slice(0,10).map((player) => {
                             return (
                                 <tr>
                                     <td>{player.firstName}</td>
@@ -54,21 +51,32 @@ refresh(){
                                     <td>{player.goals}</td>
                                 </tr> //write function to onClick
                             )
-                        })
+                       })
                     }
 
             </table>
-            </div>
         )
     }
     checkIfExist(itemToInsert){
         this.info.playersGoals.map((player)=>{
-            if(player.firstName===itemToInsert.firstName && player.lastName===itemToInsert.lastName){
+            if(this.equal(player.firstName,itemToInsert.firstName) && this.equal(player.lastName,itemToInsert.lastName)){
                 player.goals++
                 return true
             }
         })
         return false
+    }
+    equal(name,nameToCheck){
+        if(name.length===nameToCheck.length){
+        for (let i = 0; i < name.length; i++) {
+            if(name.charAt(i)!==nameToCheck.charAt(i)){
+                return false
+            }
+        }
+            return true
+        }
+        return false
+
     }
     setSite = () =>{
         this.info.id=this.props.id

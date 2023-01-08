@@ -2,79 +2,89 @@ import React from "react";
 import axios from "axios";
 
 class History extends React.Component{
-    state = {
-        teamsId: [],
+    info = {
         leaguesHistory: [],
-        listHistory: [],
-        counterGoals: 0,
+        site:undefined,
+        minRound: '',
+        maxRound: '',
+        oldId:''
     }
 
     getHistory = (props) => {
-        if(props.id !== ''){
-            axios.get(props.domainRouter + props.teamRouter + props.id)
+            axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
                 .then((response) => {
                     response.data.map((item) => {
-                        this.state.teamsId.push(item.id);
+                        let homeGoals=0
+                        let awayGoals=0
+
+                        item.goals.map((goal) => {
+                            goal.home? homeGoals++:awayGoals++
+                        })
+                        const itemToInsert = {
+                            homeTeam: item.homeTeam.name,
+                            awayTeam: item.awayTeam.name,
+                            homeGoals: homeGoals,
+                            awayGoals: awayGoals
+                        }
+                        this.info.leaguesHistory.push(itemToInsert);
                     })
                 })
-            this.state.teamsId.map((teamId) => {
 
-                axios.get(props.domainRouter + props.historyRouter + props.id + '/' + teamId)
-                    .then((response) => {
-                        response.data.map((team) => {
-                            if (team.goals.home){
-                                this.setState({
-                                    counterGoals: this.state.counterGoals +1
-                                })
-                            }
-                            const itemToInsert ={
-                                id: team.id,
-                                round: team.round,
-                                goals: this.state.counterGoals
-                            }
-                            this.state.listHistory.push(itemToInsert);
-                        })
-                    })
-            })
-        }
     }
 
-    setSite = () => {
-        this.getHistory(this.props)
-        return(
-            <div>
-                <br/>
-                <table className={"table"} >
-                    <tr>
-                        <td className={"margin blue"}>Home Team</td>
-                        <td className={"margin"}>goals </td>
-                        <div className={"margin"}>
-                            <td className={"margin"}>-</td>
-                        </div>
-                        <td className={"margin"}>goals</td>
-                        <td className={"margin red"}>Away Team</td>
+    changedMinRound =(event) => {
+        this.setState({
+            minRound: event.target.value
+        })
+    }
+    changedMaxRound =(event) => {
+        this.setState({
+            maxRound: event.target.value
+        })
+    }
+
+     setSite = () => {
+        if(this.props.id!==this.info.oldId){
+            this.info.leaguesHistory=[]
+            this.info.oldId=this.props.id
+        this.getHistory(this.props)}
+        this.info.site=
+                <div className={"marginTop"} onClick={(()=>{this.refresh()})}>
+                <div>
+                    <input className={"margin"} type={"number"} value={this.info.minRound} onChange={this.changedMinRound} placeholder={"Choose min"}/>
+                    <input type={"number"} value={this.info.maxRound} onChange={this.changedMaxRound} placeholder={"Choose max"}/>
+                </div>
+                    <table className={"table"} >
+                        <thead>
+                        <td className={"insideHeadline green"}>Home Team</td>
+                        <td className={"insideHeadline"}>goals </td>
+                        <td className={"insideHeadline red"}>Away Team</td>
+                        </thead>
                         {
-                            this.state.listHistory.map((team) => {
+                            this.info.leaguesHistory.map((item) => {
                                 return(
-                                    <div>
-                                        <td className={"margin"}>{team.id}</td>
-                                        <td className={"margin"}>{team.goals}</td>
-                                        <td className={"margin"}>-</td>
-                                        {/*<td className={"spacingTable"}>{team.round}</td>
-                                        <td className={"spacingTable"}>{team.id}</td>*/}
-                                    </div>
+                                    <thead>
+                                    <td>{item.homeTeam} </td>
+                                    <td>{item.homeGoals} - {item.awayGoals} </td>
+                                    <td>{item.awayTeam}</td>
+                                    </thead>
                                 )
                             })
                         }
-                    </tr>
+                    </table>
+                </div>
 
-                </table>
-            </div>
-        )
+        return this.info.site
+    }
+    refresh(){
+        this.setState({})
+        this.props.change.setState({})
     }
     render() {
         return(
-            this.setSite()
+            <il>
+                {this.setSite()}
+            </il>
         )
     }
 

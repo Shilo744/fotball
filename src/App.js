@@ -14,6 +14,7 @@ class App extends React.Component {
 info={
     start:true,
     key:'',
+    routersShow:undefined,
     pageName:{HomePage:"HomePage",
         Teams:"Teams",
         History:"History",
@@ -119,7 +120,7 @@ info={
     this.setState({})
     }
     pageList(){
-    if(this.info.change){
+        if(this.info.change){
         this.refresh()
         this.info.change=false
     }
@@ -129,11 +130,13 @@ info={
         }
         this.selectOptions()
 
-        return (<div onChange={()=>{this.refresh()}}>
+        return (
                 <BrowserRouter>
+                    <a href={"https://www.one.co.il/"}>
                     <il className={"headlineBackground"}>
                     <il className={"straightLines red"}>|||</il>
                     <il className={"headline blue"}>TWO</il></il>
+                    </a>
                     <br/>
                     <il className={"gold text"}>Choose a league </il>
                     {/*כפתור בחירת קבוצה*/}
@@ -148,25 +151,21 @@ info={
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.History)}} className={this.colors.historyColor} to={this.info.pageName.History}>{this.info.pageName.History}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.MostGoals)}} className={this.colors.mostGoalsColor} to={this.info.pageName.MostGoals}>{this.info.pageName.MostGoals}</NavLink>
                     <NavLink onClick={()=>{this.changeColorOfLink(this.info.pageName.Statistics)}} className={this.colors.statisticsColor} to={this.info.pageName.Statistics}>{this.info.pageName.Statistics}</NavLink>
-
                     </div>
                     {this.routers()}
-
+                    {this.info.routersShow}
                 </BrowserRouter>
-        </div>
         );
     }
     routers(){
-
-    const routers=<Routes>
-        <Route path={"/"} element={<HomePage props={this.info.routers.leaguesListRouter}/>}/>
+    this.info.routersShow=<Routes>
+        <Route path={"/"} element={<HomePage/>}/>
         <Route path={"/teams"} element={<Teams routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
-        <Route path={"/historyToShow"} element={<History id={this.info.key}/>}/>
+        <Route path={"/history"} element={<History id={this.info.key} routers={this.info.routers} change={this.state}/>}/>
         <Route path={"/mostGoals"} element={<MostGoals routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
-        <Route path={"/statistics"} element={<Statistics/>}/>
+        <Route path={"/statistics"} element={<Statistics routers={this.info.routers} id={this.info.key} change={this.state}/>}/>
         <Route path={"*"} element={<NotFount/>}/>
     </Routes>
-    return routers
     }
 
   render() {
