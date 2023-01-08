@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 
 class MostGoals extends React.Component{
+    state={
+        interval:setInterval((()=>{this.refresh()}),500)
+    }
     info={
         playersGoals:[],
         sortedPlayers:[],
@@ -36,7 +39,7 @@ refresh(){
         }
         this.info.sortedPlayers=this.sort(this.info.playersGoals)
         return(
-            <div className={"marginTop"} onClick={(()=>{this.refresh()})}>
+            <div className={"marginTop"}>
             <table className={"table"}>
                 <tr>
                 <td className={"margin backgroundMidnightblue text"}>First Name:</td>

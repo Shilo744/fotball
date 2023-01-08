@@ -2,11 +2,16 @@ import React from "react";
 import axios from "axios";
 
 class History extends React.Component{
+    state={
+        interval:setInterval((()=>{this.refresh()}),500)
+    }
     info = {
         leaguesHistory: [],
         site:undefined,
         minRound: '',
         maxRound: '',
+        oldMinRound: '',
+        oldMaxRound: '',
         oldId:''
     }
 
@@ -33,14 +38,12 @@ class History extends React.Component{
     }
 
     changedMinRound =(event) => {
-        this.setState({
-            minRound: event.target.value
-        })
+        this.info.minRound=event.target.value
+        this.setState({})
     }
     changedMaxRound =(event) => {
-        this.setState({
-            maxRound: event.target.value
-        })
+            this.info.maxRound=event.target.value
+            this.setState({})
     }
 
      setSite = () => {

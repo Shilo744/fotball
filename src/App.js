@@ -38,7 +38,7 @@ info={
     },
 }
     colors={
-        homepageColor: this.info.colorOnClick,
+        homepageColor: this.info.usualColor,
         teamsColor: this.info.usualColor,
         mostGoalsColor: this.info.usualColor,
         historyColor: this.info.usualColor,
@@ -167,10 +167,74 @@ info={
         <Route path={"*"} element={<NotFount/>}/>
     </Routes>
     }
+    tableSort = (item) => {
+        let homeGoals=0
+        let awayGoals=0
 
+        item.goals.map((goal) => {
+            goal.home? homeGoals++:awayGoals++
+        })
+        const itemToInsert = {
+            homeTeam: item.homeTeam.name,
+            awayTeam: item.awayTeam.name,
+            homeGoals: homeGoals,
+            awayGoals: awayGoals,
+        }
+        this.info.leaguesHistory.push(itemToInsert);
+    }
+
+    getHistory = (props) => {
+        /*axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
+            .then((response) => {
+                response.data.map((item) => {
+                    let homeGoals=0
+                    let awayGoals=0
+
+                    item.goals.map((goal) => {
+                        goal.home? homeGoals++:awayGoals++
+                    })
+                    const itemToInsert = {
+                        homeTeam: item.homeTeam.name,
+                        awayTeam: item.awayTeam.name,
+                        homeGoals: homeGoals,
+                        awayGoals: awayGoals
+                    }
+                    this.info.leaguesHistory.push(itemToInsert);
+                })
+            })*/
+
+        if(this.info.minRound === '' && this.info.maxRound === ''){
+            if(props.id !== ''){
+                axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
+                    .then((response) => {
+                        response.data.map((item) => {
+                            this.tableSort(item);
+                        })
+                    })
+            }
+        }else if (this.info.maxRound >= 1 && this.info.minRound === ''){
+            this.optionSort(props,1,this.info.maxRound);
+        }else if ((this.info.minRound !== '' && this.info.maxRound !== '' && this.info.minRound < this.info.maxRound && this.info.minRound >= 1)
+            || (this.info.minRound >= 1 && this.info.maxRound >= this.info.maxRound)){
+            this.optionSort(props,this.info.minRound,this.info.maxRound);
+        }
+    }
+
+    optionSort =(props,min,max) => {
+        if (props.id !== ''){
+            for (let i = min; i <= max ; i++) {
+                axios.get(props.routers.domainRouter + props.routers.roundRouter + props.id +'/' + i)
+                    .then((response) => {
+                        response.data.map((item) => {
+                            this.tableSort(item);
+                        })
+                    })
+            }
+        }
+    }
   render() {
     return (
-        <div className="App">
+        <div>
             {this.pageList()}
       </div>
     );

@@ -1,6 +1,5 @@
 function HomePage() {
     return (
-        <div>
             <div className={"text"}>
                 <a href={"https://www.premierleague.com/"}>
                     <img src={"https://supersport-cms-prod.azureedge.net/media/icxfej42/premier-league.png?width=500"}/>
@@ -13,7 +12,6 @@ function HomePage() {
                 <img src={"https://www.figc.it/media/153665/logo_figc_ist_2021.jpg"}/>
                 </a>
             </div>
-        </div>
     );
 }
 

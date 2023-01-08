@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 
 class Teams extends React.Component {
+    state={
+        interval:setInterval((()=>{this.refresh()}),500)
+    }
     info = {
         refresh:true,
         leaguesTeams: [],
@@ -45,16 +48,18 @@ class Teams extends React.Component {
                 }
             )}
             return(<table className={"table"}>
+                <tr>
                 <td className={"insideHeadline green"}>Home team</td>
                 <td className={"insideHeadline gold"}>Goals</td>
                 <td className={"insideHeadline red"}>Away team</td>
+                </tr>
                 {
                         this.info.history.map((item) => {
                             return (
                                   <tr>
-                                    <th>{item.homeTeam} </th>
-                                    <th>{item.homeGoals +" - "}{item.awayGoals} </th>
-                                    <th>{item.awayTeam}</th>
+                                    <td>{item.homeTeam} </td>
+                                    <td>{item.homeGoals +" - "}{item.awayGoals} </td>
+                                    <td>{item.awayTeam}</td>
                                 </tr>//write function to onClick
                             )
                         })
@@ -67,6 +72,7 @@ class Teams extends React.Component {
                 this.info.currentLeague = this.props.id
                 this.info.leaguesTeams = []
                 this.info.clickedTeam = []
+                this.info.historyToShow=undefined
                 this.info.teamToShow=undefined
                 const link=props.routers.domainRouter + props.routers.teamRouter + props.id
                 axios.get(link)
@@ -82,7 +88,6 @@ class Teams extends React.Component {
                     )
             }
         }
-
 
     getPlayers = (props) => {
             if ((this.info.currentClickedTeam !== this.info.oldClickedTeam) || (this.info.currentClickedTeam!=='' && this.info.oldClickedTeam==='')) {
@@ -142,6 +147,7 @@ class Teams extends React.Component {
         this.refresh()
     }
     enterContent(){
+        let text=''
         if(this.info.leaguesTeams.length>0){
             this.info.pageToShow=<table className={"table"}>
 
@@ -163,12 +169,22 @@ class Teams extends React.Component {
                 }
         </table>
         }
-        else this.info.pageToShow= <table className={"table"} onClick={(()=>{this.refresh()})}>
+        else if(this.props.id===''){
+            text="Please choose a league"
+            this.emptyPage(text)
+        }else{
+            text="please wait"
+        this.emptyPage(text)
+        }
+
+        return this.info.pageToShow
+    }
+    emptyPage(text){
+        this.info.pageToShow= <table className={"table"} onClick={(()=>{this.refresh()})}>
             <tr>
-               Please choose a league and click here
+                {text}
             </tr>
         </table>
-        return this.info.pageToShow
     }
     sort(array){
         for (let i = 0; i <array.length-1; i++) {

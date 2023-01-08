@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 
 class Statistics extends React.Component {
+    state={
+        interval:setInterval((()=>{this.refresh()}),500)
+    }
     info = {
         halfOneGoals: 0,
         halfTwoGoals: 0,
@@ -27,6 +30,7 @@ class Statistics extends React.Component {
 
 
     getStatistics = (props) => {
+
         let half1 = 0;
         let half2 = 0;
         let minMinuteGoal = 90
@@ -64,84 +68,6 @@ class Statistics extends React.Component {
                 this.info.minMinuteGoal = minMinuteGoal;
                 this.info.maxMinuteGoal = maxMinuteGoal;
             })
-        /*for (let i = 1; i <= 3; i++) {
-            axios.get(props.routers.domainRouter + props.routers.historyRouter + i)
-                .then((response) => {
-                    response.data.map((item) => {
-                        item.goals.map((player) => {
-                            if (player.minute <= 45){
-                                half1++;
-                            } else {
-                                half2++;
-                            }
-                            if(player.minute < minMinuteGoal){
-                                minMinuteGoal = player.minute;
-                            }
-                            if (player.minute > maxMinuteGoal) {
-                                maxMinuteGoal = player.minute
-                            }
-                        })
-                    })
-                    this.info.halfOneGoals = half1;
-                    this.info.halfTwoGoals = half2;
-                    this.info.minMinuteGoal = minMinuteGoal;
-                    this.info.maxMinuteGoal = maxMinuteGoal;
-                })
-        }*/
-        /*for (let i = 0; i <= 3; i++) {
-            for (let j = 1; j <= 10; j++) {
-                axios.get(props.routers.domainRouter + props.routers.roundRouter + i +'/' + j)
-                    .then((response) => {
-                        response.data.map((item) => {
-                            switch (item.round){
-                                case 1:{
-                                    round1 += item.goals.length
-                                    break
-                                }case 2:{
-                                    round2 += item.goals.length
-                                    break
-                                }case 3:{
-                                    round3 += item.goals.length
-                                    break
-                                }case 4:{
-                                    round4 += item.goals.length
-                                    break
-                                }case 5:{
-                                    round5 += item.goals.length
-                                    break
-                                }case 6:{
-                                    round6 += item.goals.length
-                                    break
-                                }case 7:{
-                                    round7 += item.goals.length
-                                    break
-                                }case 8:{
-                                    round8 += item.goals.length
-                                    break
-                                }case 9:{
-                                    round9 += item.goals.length
-                                    break
-                                }case 10:{
-                                    round10 += item.goals.length
-                                    break
-                                }
-                            }
-
-                        })
-                    })
-            }
-        }*/
-        /*this.info.rounds.round1 = round1;
-        this.info.rounds.round2 = round2;
-        this.info.rounds.round3 = round3;
-        this.info.rounds.round4 = round4;
-        this.info.rounds.round5 = round5;
-        this.info.rounds.round6 = round6;
-        this.info.rounds.round7 = round7;
-        this.info.rounds.round8 = round8;
-        this.info.rounds.round9 = round9;
-        this.info.rounds.round10 = round10;
-        //this.sortMinAndMax(this.info.rounds);*/
     }
 
 
@@ -166,28 +92,46 @@ class Statistics extends React.Component {
             this.getStatistics(this.props)
         }
         return(
-            <div className={"home-page-text"}>
+            <div className={"statistics-text"}>
+                <br/>
                 <div>
-                    <button className={"home-page-text"} >Choose a league and press statistics</button>
                 </div>
-                <div>
-                    Statistics:
-                </div>
-                <div>
-                    Goals: half1: {this.info.halfOneGoals} VS half2: {this.info.halfTwoGoals}
-                </div>
-                <div>
-                    Minute: min: {this.info.minMinuteGoal} VS max: {this.info.maxMinuteGoal}
-                </div>
-                <div>
-                    Round goals: min: {this.roundsMinMax.minRoundGoals} VS max: {this.roundsMinMax.maxRoundGoals}
-                </div>
+                <div className={"statistics-text headline"}>
+                    Statistics:</div>
+                <table className={"table"}>
+                <td className={"insideHeadline statistics-text headline backgroundRed"}>
+                    Goals on first Half
+                </td>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>Goals on second half</td>
+                    <tr><td>{this.info.halfOneGoals}</td><td>{this.info.halfTwoGoals}</td></tr>
+                </table>
+                <div className={"statistics-text headline marginTop"}>
+                    Earlier goal vs latest goal:</div>
+                <table className={"table"}>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>
+                        min minutes
+                    </td>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>max minutes</td>
+                    <tr><td>{this.info.minMinuteGoal}</td><td>{this.info.maxMinuteGoal}</td></tr>
+                </table>
+                <div className={"statistics-text headline marginTop"}>
+                    Round goals:</div>
+                <table className={"table"}>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>
+                        min
+                    </td>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>max</td>
+                    <tr><td>{this.roundsMinMax.minRoundGoals}</td><td>{this.roundsMinMax.maxRoundGoals}</td></tr>
+                </table>
             </div>
 
 
         )
     }
-
+    refresh(){
+        this.setState({})
+        this.props.change.setState({})
+    }
 }
 
 export default Statistics;
