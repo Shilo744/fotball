@@ -15,7 +15,6 @@ class History extends React.Component{
         oldId:'',
         maxToChoose:''
     }
- counter=0
     getHistory = (props) => {
         this.counter++
             axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
@@ -109,7 +108,6 @@ class History extends React.Component{
     render() {
         return (
             <il>
-                {this.counter}
                 {this.setSite()}
             </il>
         )

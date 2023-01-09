@@ -134,7 +134,9 @@ info={
                     <a href={"https://www.one.co.il/"}>
                     <il className={"headlineBackground"}>
                     <il className={"straightLines red"}>|||</il>
-                    <il className={"headline blue"}>TWO</il></il>
+                    <il className={"headline blue"}>TW</il>
+                    <il className={"two"}>2</il>
+                    </il>
                     </a>
                     <br/>
                     <il className={"gold text"}>Choose a league </il>
