@@ -10,41 +10,36 @@ class Statistics extends React.Component {
         halfTwoGoals: 0,
         minMinuteGoal: 0,
         maxMinuteGoal: 0,
-        rounds: {
-            round1: 0,
-            round2: 0,
-            round3: 0,
-            round4: 0,
-            round5: 0,
-            round6: 0,
-            round7: 0,
-            round8: 0,
-            round9: 0,
-            round10: 0,
-        }
+        countRounds: 0
     }
-    roundsMinMax ={
+    rounds ={
         minRoundGoals: 0,
         maxRoundGoals: 0
     }
 
+    componentDidMount() {
+        this.quantityRounds(this.props)
+    }
+
+    quantityRounds = (props) => {
+        let count = 0;
+        axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
+            .then((response) => {
+                response.data.map((item) => {
+                    if(item.round !== count){
+                        count++;
+                    }
+                })
+                this.info.countRounds = count;
+            })
+    }
 
     getStatistics = (props) => {
-
         let half1 = 0;
         let half2 = 0;
         let minMinuteGoal = 90
         let maxMinuteGoal = 0
-        let round1 = 0;
-        let round2 = 0;
-        let round3 = 0;
-        let round4 = 0;
-        let round5 = 0;
-        let round6 = 0;
-        let round7 = 0;
-        let round8 = 0;
-        let round9 = 0;
-        let round10 = 0;
+
 
         axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
             .then((response) => {
@@ -68,29 +63,42 @@ class Statistics extends React.Component {
                 this.info.minMinuteGoal = minMinuteGoal;
                 this.info.maxMinuteGoal = maxMinuteGoal;
             })
+        let countMin = 0;
+        let countMax = 0;
+        let min = 20;
+        let max = 0;
+        let roundMin = 0;
+        let roundMax = 0;
+        for (let j = 1; j <= this.info.countRounds; j++) {
+            axios.get(props.routers.domainRouter + props.routers.roundRouter + props.id +'/' + j)
+                .then((response) => {
+                    response.data.map((item) => {
+                        if (item.round === j){
+                            countMin++;
+                            countMax++;
+                        }
+                    })
+                    if (countMin < min) {
+                        min = countMin;
+                        roundMin = j;
+                        countMin = 0;
+
+                    }
+                    if (countMax > max){
+                        max = countMax;
+                        roundMax = j;
+                        countMax = 0;
+                    }
+                    this.rounds.minRoundGoals = roundMin;
+                    this.rounds.maxRoundGoals = roundMax;
+                })
+        }
     }
 
 
-
-    sortMinAndMax = (rounds) => {
-        let min = rounds[0];
-        let max = rounds[0];
-        this.info.rounds.map((round) => {
-            if(round < min){
-                min = round;
-            }
-            if(round > max){
-                max = round;
-            }
-        })
-        this.roundsMinMax.minRoundGoals = min;
-        this.roundsMinMax.maxRoundGoals = max;
-    }
 
     render() {
-        {
             this.getStatistics(this.props)
-        }
         return(
             <div className={"statistics-text"}>
                 <br/>
@@ -99,9 +107,9 @@ class Statistics extends React.Component {
                 <div className={"statistics-text headline"}>
                     Statistics:</div>
                 <table className={"table"}>
-                <td className={"insideHeadline statistics-text headline backgroundRed"}>
-                    Goals on first Half
-                </td>
+                    <td className={"insideHeadline statistics-text headline backgroundRed"}>
+                        Goals on first Half
+                    </td>
                     <td className={"insideHeadline statistics-text headline backgroundRed"}>Goals on second half</td>
                     <tr><td>{this.info.halfOneGoals}</td><td>{this.info.halfTwoGoals}</td></tr>
                 </table>
@@ -121,7 +129,7 @@ class Statistics extends React.Component {
                         min
                     </td>
                     <td className={"insideHeadline statistics-text headline backgroundRed"}>max</td>
-                    <tr><td>{this.roundsMinMax.minRoundGoals}</td><td>{this.roundsMinMax.maxRoundGoals}</td></tr>
+                    <tr><td>{this.rounds.minRoundGoals}</td><td>{this.rounds.maxRoundGoals}</td></tr>
                 </table>
             </div>
 
@@ -132,6 +140,7 @@ class Statistics extends React.Component {
         this.setState({})
         this.props.change.setState({})
     }
+
 }
 
 export default Statistics;

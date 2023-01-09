@@ -10,7 +10,6 @@ import MostGoals from "./MostGoals";
 import Statistics from "./Statistics";
 
 class App extends React.Component {
-
 info={
     start:true,
     key:'',
@@ -181,43 +180,6 @@ info={
             awayGoals: awayGoals,
         }
         this.info.leaguesHistory.push(itemToInsert);
-    }
-
-    getHistory = (props) => {
-        /*axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
-            .then((response) => {
-                response.data.map((item) => {
-                    let homeGoals=0
-                    let awayGoals=0
-
-                    item.goals.map((goal) => {
-                        goal.home? homeGoals++:awayGoals++
-                    })
-                    const itemToInsert = {
-                        homeTeam: item.homeTeam.name,
-                        awayTeam: item.awayTeam.name,
-                        homeGoals: homeGoals,
-                        awayGoals: awayGoals
-                    }
-                    this.info.leaguesHistory.push(itemToInsert);
-                })
-            })*/
-
-        if(this.info.minRound === '' && this.info.maxRound === ''){
-            if(props.id !== ''){
-                axios.get(props.routers.domainRouter + props.routers.historyRouter + props.id)
-                    .then((response) => {
-                        response.data.map((item) => {
-                            this.tableSort(item);
-                        })
-                    })
-            }
-        }else if (this.info.maxRound >= 1 && this.info.minRound === ''){
-            this.optionSort(props,1,this.info.maxRound);
-        }else if ((this.info.minRound !== '' && this.info.maxRound !== '' && this.info.minRound < this.info.maxRound && this.info.minRound >= 1)
-            || (this.info.minRound >= 1 && this.info.maxRound >= this.info.maxRound)){
-            this.optionSort(props,this.info.minRound,this.info.maxRound);
-        }
     }
 
     optionSort =(props,min,max) => {
